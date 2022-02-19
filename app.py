@@ -1,4 +1,5 @@
-from flask import Flask,jsonify,request
+import re
+from flask import Flask,jsonify, redirect,request
 from flask_mysqldb import MySQL
 from decouple import config
 from jose import jwt
@@ -14,6 +15,10 @@ app.config["MYSQL_USER"]=config('MYSQL_USER')
 app.config["MYSQL_PASSWORD"]=config('MYSQL_PASSWORD')
 app.config["MYSQL_PORT"]=int(config('MYSQL_PORT'))
 
+
+@app.route('/')
+def index():
+    redirect('https://documenter.getpostman.com/view/17377152/UVkjwHoQ')
 
 @app.route('/usuarios',methods=['GET'])
 def usuarios():
@@ -71,7 +76,7 @@ def update(id):
     username=data["username"]
     password=data["password"]
     cursor=mysql.connection.cursor()
-    cursor.execute("UPDATE usuarios SET usuario = '{}', contraseña = '{}' WHERE condition id='{}';".format(username,password,id))
+    cursor.execute("UPDATE usuarios SET usuario = '{}', contraseña = '{}' WHERE id='{}';".format(username,password,id))
     mysql.connection.commit()
     cursor.close()
     return jsonify({"Message":"Usuario Actualizado  con exito"})
