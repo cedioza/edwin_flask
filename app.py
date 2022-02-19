@@ -18,7 +18,7 @@ app.config["MYSQL_PORT"]=int(config('MYSQL_PORT'))
 
 @app.route('/')
 def index():
-    redirect('https://documenter.getpostman.com/view/17377152/UVkjwHoQ')
+    return redirect('https://documenter.getpostman.com/view/17377152/UVkjwHoQ')
 
 @app.route('/usuarios',methods=['GET'])
 def usuarios():
