@@ -64,11 +64,15 @@ def create():
 @app.route('/usuario/<int:id>',methods=['DELETE'])
 def delete(id):
     cursor=mysql.connection.cursor()
-    cursor.execute("DELETE FROM usuarios WHERE id ='{}';".format(id))
-    mysql.connection.commit()
-    cursor.close()
-    
-    return jsonify({"Message":"Usuario Eliminado con exito"})
+    cursor.execute("select * FROM usuarios where id='{}'".format(id))
+    data=cursor.fetchone()
+    if(data): 
+        cursor.execute("DELETE FROM usuarios WHERE id ='{}';".format(id))
+        mysql.connection.commit()
+        cursor.close()
+        return jsonify({"Message":"Usuario Eliminado con exito"})
+    else :
+        return jsonify({"Message":"Usuario no encontrado"})
 
 @app.route('/usuario/<int:id>', methods=["PUT"])
 def update(id):
@@ -76,10 +80,21 @@ def update(id):
     username=data["username"]
     password=data["password"]
     cursor=mysql.connection.cursor()
-    cursor.execute("UPDATE usuarios SET username = '{}', password = '{}' WHERE id='{}';".format(username,password,id))
-    mysql.connection.commit()
-    cursor.close()
-    return jsonify({"Message":"Usuario Actualizado  con exito"})
+    cursor.execute("select * FROM usuarios where id='{}'".format(id))
+    data=cursor.fetchone()
+   
+    if(data):
+        cursor.execute("UPDATE usuarios SET username = '{}', password = '{}' WHERE id='{}';".format(username,password,id))
+        mysql.connection.commit()
+        cursor.close()
+        return jsonify({"Message":"Usuario Actualizado  con exito"})
+    else:
+        return jsonify({"Message":"Usuario no encontrado"})
+
+   
+
+    
+    
 
 
 @app.route('/login', methods=['POST'])
