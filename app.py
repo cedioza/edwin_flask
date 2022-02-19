@@ -65,16 +65,15 @@ def delete(id):
     
     return jsonify({"Message":"Usuario Eliminado con exito"})
 
-@app.route('/usuario', methods=['PUT'])
-def update():
+@app.route('/usuario/<int:id>', methods=["PUT"])
+def update(id):
     data=request.json
     username=data["username"]
     password=data["password"]
     cursor=mysql.connection.cursor()
-    cursor.execute("UPDATE usuarios SET usuario = '{}', contraseña = '{}'} WHERE condition;").format(username,password)
+    cursor.execute("UPDATE usuarios SET usuario = '{}', contraseña = '{}'} WHERE condition id='{}';".format(username,password,id))
     mysql.connection.commit()
     cursor.close()
-    
     return jsonify({"Message":"Usuario Actualizado  con exito"})
 
 
