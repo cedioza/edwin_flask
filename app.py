@@ -71,7 +71,7 @@ def update(id):
     username=data["username"]
     password=data["password"]
     cursor=mysql.connection.cursor()
-    cursor.execute("UPDATE usuarios SET usuario = '{}', contraseña = '{}'} WHERE condition id='{}';".format(username,password,id))
+    cursor.execute("UPDATE usuarios SET usuario = '{}', contraseña = '{}' WHERE condition id='{}';".format(username,password,id))
     mysql.connection.commit()
     cursor.close()
     return jsonify({"Message":"Usuario Actualizado  con exito"})
