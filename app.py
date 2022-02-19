@@ -48,6 +48,7 @@ def create():
     data=request.json
     username=data["username"]
     password=data["password"]
+    name=data["name"]
 
     cursor=mysql.connection.cursor()
     cursor.execute("select * FROM usuarios where username='{}'".format(username))
@@ -55,7 +56,7 @@ def create():
     if(data):
          return jsonify({"Message":"Usuario con ese username ya esta registrado"})
     else:
-        cursor.execute("INSERT INTO usuarios (username,password) VALUES ('{}', '{}');".format(username,password))
+        cursor.execute("INSERT INTO usuarios (name,username,password) VALUES ('{}','{}', '{}');".format(name,username,password))
         mysql.connection.commit()
         cursor.close()
         return jsonify({"Message":"Usuario Registrado con exito"})
@@ -79,12 +80,13 @@ def update(id):
     data=request.json
     username=data["username"]
     password=data["password"]
+    name=data["name"]
     cursor=mysql.connection.cursor()
     cursor.execute("select * FROM usuarios where id='{}'".format(id))
     data=cursor.fetchone()
    
     if(data):
-        cursor.execute("UPDATE usuarios SET username = '{}', password = '{}' WHERE id='{}';".format(username,password,id))
+        cursor.execute("UPDATE usuarios SET name = '{}',username = '{}', password = '{}' WHERE id='{}';".format(name,username,password,id))
         mysql.connection.commit()
         cursor.close()
         return jsonify({"Message":"Usuario Actualizado  con exito"})
@@ -106,7 +108,7 @@ def login():
     cursor.execute("select * from usuarios where username='{}' and password ='{}'".format(username, password))
     data=cursor.fetchone()
     if(data):
-        token=jwt.encode({"id":data[0],"username":data[1],"password":data[2]},config('KEY'), algorithm='HS256')
+        token=jwt.encode({"id":data[0],"name":data[1],"username":data[2],"password":data[3]},config('KEY'), algorithm='HS256')
         return token
     else :
         return jsonify({"Message":"Credenciales Invalidas"})
