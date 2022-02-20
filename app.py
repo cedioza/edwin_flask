@@ -4,6 +4,7 @@ from flask import Flask,jsonify, redirect,request
 from flask_mysqldb import MySQL
 from decouple import config
 from jose import jwt
+from flask_cors import CORS
 
 
 app = Flask(__name__)
@@ -15,6 +16,8 @@ app.config["MYSQL_DB"]=config('MYSQL_DB')
 app.config["MYSQL_USER"]=config('MYSQL_USER')
 app.config["MYSQL_PASSWORD"]=config('MYSQL_PASSWORD')
 app.config["MYSQL_PORT"]=int(config('MYSQL_PORT'))
+
+cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
 
 @app.route('/')
