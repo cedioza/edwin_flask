@@ -64,7 +64,7 @@ def create():
             cursor.close()
             return jsonify({"Message":"Usuario Registrado con exito"})
     except :
-        jsonify({"Message":"Debes ingresar todos los campos "})
+        return jsonify({"Message":"Debes ingresar todos los campos "})
 
 
 @app.route('/usuario/<int:id>',methods=['DELETE'])
@@ -90,7 +90,6 @@ def update(id):
        cursor=mysql.connection.cursor()
        cursor.execute("select * FROM usuarios where id='{}'".format(id))
        data=cursor.fetchone()
-   
        if(data):
            cursor.execute("UPDATE usuarios SET name = '{}',username = '{}', password = '{}' WHERE id='{}';".format(name,username,password,id))
            mysql.connection.commit()
