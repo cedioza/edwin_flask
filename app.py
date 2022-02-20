@@ -1,4 +1,5 @@
 import re
+from this import d
 from flask import Flask,jsonify, redirect,request
 from flask_mysqldb import MySQL
 from decouple import config
@@ -45,10 +46,15 @@ def usuario(id):
 
 @app.route('/usuario',methods=["POST"])
 def create():
+
     data=request.json
-    username=data["username"]
-    password=data["password"]
-    name=data["name"]
+    try:
+
+        username=data["username"]
+        password=data["password"]
+        name=data["name"]
+    except :
+        jsonify({"Message":"Debes ingresar todos los campos "})
 
     cursor=mysql.connection.cursor()
     cursor.execute("select * FROM usuarios where username='{}'".format(username))
@@ -78,9 +84,13 @@ def delete(id):
 @app.route('/usuario/<int:id>', methods=["PUT"])
 def update(id):
     data=request.json
-    username=data["username"]
-    password=data["password"]
-    name=data["name"]
+    try:
+       username=data["username"]
+       password=data["password"]
+       name=data["name"]
+    except :
+        return jsonify({"Message":"Debes ingresar todos los campos "})
+
     cursor=mysql.connection.cursor()
     cursor.execute("select * FROM usuarios where id='{}'".format(id))
     data=cursor.fetchone()
