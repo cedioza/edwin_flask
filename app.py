@@ -53,19 +53,18 @@ def create():
         username=data["username"]
         password=data["password"]
         name=data["name"]
+        cursor=mysql.connection.cursor()
+        cursor.execute("select * FROM usuarios where username='{}'".format(username))
+        data=cursor.fetchone()
+        if(data):
+            return jsonify({"Message":"Usuario con ese username ya esta registrado"})
+        else:
+            cursor.execute("INSERT INTO usuarios (name,username,password) VALUES ('{}','{}', '{}');".format(name,username,password))
+            mysql.connection.commit()
+            cursor.close()
+            return jsonify({"Message":"Usuario Registrado con exito"})
     except :
         jsonify({"Message":"Debes ingresar todos los campos "})
-
-    cursor=mysql.connection.cursor()
-    cursor.execute("select * FROM usuarios where username='{}'".format(username))
-    data=cursor.fetchone()
-    if(data):
-         return jsonify({"Message":"Usuario con ese username ya esta registrado"})
-    else:
-        cursor.execute("INSERT INTO usuarios (name,username,password) VALUES ('{}','{}', '{}');".format(name,username,password))
-        mysql.connection.commit()
-        cursor.close()
-        return jsonify({"Message":"Usuario Registrado con exito"})
 
 
 @app.route('/usuario/<int:id>',methods=['DELETE'])
@@ -88,24 +87,20 @@ def update(id):
        username=data["username"]
        password=data["password"]
        name=data["name"]
+       cursor=mysql.connection.cursor()
+       cursor.execute("select * FROM usuarios where id='{}'".format(id))
+       data=cursor.fetchone()
+   
+       if(data):
+           cursor.execute("UPDATE usuarios SET name = '{}',username = '{}', password = '{}' WHERE id='{}';".format(name,username,password,id))
+           mysql.connection.commit()
+           cursor.close()
+           return jsonify({"Message":"Usuario Actualizado  con exito"})
+       else:
+           return jsonify({"Message":"Usuario no encontrado"})
     except :
         return jsonify({"Message":"Debes ingresar todos los campos "})
 
-    cursor=mysql.connection.cursor()
-    cursor.execute("select * FROM usuarios where id='{}'".format(id))
-    data=cursor.fetchone()
-   
-    if(data):
-        cursor.execute("UPDATE usuarios SET name = '{}',username = '{}', password = '{}' WHERE id='{}';".format(name,username,password,id))
-        mysql.connection.commit()
-        cursor.close()
-        return jsonify({"Message":"Usuario Actualizado  con exito"})
-    else:
-        return jsonify({"Message":"Usuario no encontrado"})
-
-   
-
-    
     
 
 
