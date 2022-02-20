@@ -51,26 +51,27 @@ def usuario(id):
 def create():
 
     data=request.json
-    try:
+    
 
-        username=data["username"]
-        password=data["password"]
-        name=data["name"]
-        cursor=mysql.connection.cursor()
-        cursor.execute("select * FROM usuarios where username='{}'".format(username))
-        data=cursor.fetchone()
-        if(data):
-            return jsonify({"Message":"Usuario con ese username ya esta registrado"})
-        else:
-            cursor.execute("INSERT INTO usuarios (name,username,password) VALUES ('{}','{}', '{}');".format(name,username,password))
-            mysql.connection.commit()
-            cursor.close()
-            return jsonify({"Message":"Usuario Registrado con exito"})
-    except :
-        return jsonify({"Message":"Debes ingresar todos los campos "})
+    username=data["username"]
+    password=data["password"]
+    name=data["name"]
+    cursor=mysql.connection.cursor()
+    cursor.execute("select * FROM usuarios where username='{}'".format(username))
+    data=cursor.fetchone()
+    if(data):
+        return jsonify({"Message":"Usuario con ese username ya esta registrado"})
+    else:
+        cursor.execute("INSERT INTO usuarios (name,username,password) VALUES ('{}','{}', '{}');".format(name,username,password))
+        mysql.connection.commit()
+        cursor.close()
+        return jsonify({"Message":"Usuario Registrado con exito"})
+    
+        #return jsonify({"Message":"Debes ingresar todos los campos "})
+        
 
 
-@app.route('/usuario/<int:id>',methods=['DELETE'])
+@app.route('/usuario/<string:id>',methods=['DELETE'])
 def delete(id):
     cursor=mysql.connection.cursor()
     cursor.execute("select * FROM usuarios where id='{}'".format(id))
